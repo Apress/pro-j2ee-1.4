@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screen-definitions>
+
+  <default-template>/template.jsp</default-template>
+
+   <screen name="customer_edit">
+    <parameter key="title" value="Update details" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/customer_edit.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="customer_create">
+    <parameter key="title" value="Register" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/customer_create.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="action_success">
+    <parameter key="title" value="Success" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/action_success.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="blank">
+    <parameter key="title" value="Acme Auction System" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/blank.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="signon_failed">
+    <parameter key="title" value="Signon Failed" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/signon_failed.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="offer_search">
+    <parameter key="title" value="Signon Failed" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/offer_search.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="offer_list">
+    <parameter key="title" value="Signon Failed" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/offer_list.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+   <screen name="offer_create">
+    <parameter key="title" value="Signon Failed" direct="true"/>
+    <parameter key="banner" value="/banner.jsp"/>
+    <parameter key="menu" value="/menu.jsp" />
+    <parameter key="body" value="/offer_create.jsp"/>
+    <parameter key="error" value="/error.jsp"/>
+   </screen>
+
+</screen-definitions>
+

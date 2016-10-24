@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+  <!ENTITY commonAntCommands SYSTEM "../../../config/common-ant.xml">
+  <!ENTITY appServerAntCommands SYSTEM "../../../config/app-server-ant.xml">
+]>
+
+<project name="auction" default="core" basedir=".">
+
+    <!-- path to root -->
+    <property name="root.dir" value="../../.."/>
+
+    &commonAntCommands; <!-- include common ant commands -->
+
+
+    <!-- The root directory of the workspace -->
+    <property name="home" value=".."/>
+    <property name="jstl.lib" value="../../../lib/jstl"/>
+    <property name="src" value="${home}/src"/>
+    <property name="docroot" value="${src}/docroot"/>
+
+    <!-- Build directories -->
+    <property name="build.dir" value="${home}/build"/>
+    <property name="build.temp" value="${build.dir}/temp"/>
+    <property name="build.classes" value="${build.dir}/classes"/>
+
+    <!-- Component base directory -->
+    <property name="components.basedir" value="../../../components"/>
+
+    <!-- Application Module to be deployed -->
+    <property name="application.module" value="${build.dir}/auction.ear"/>
+     <!-- Banner Title for build -->
+    <property name="banner.title" value="WROX Auction Application"/>
+
+    <!-- Signon Component -->
+    <property name="signon.home" value="${components.basedir}/signon"/>
+    <property name="signon.jar" value="${signon.home}/build/signon-web.jar"/>
+    <property name="signon.ejb.jar" value="${signon.home}/build/signon-ejb.jar"/>
+    <property name="signon.client.jar" value="${signon.home}/build/signon-ejb-client.jar"/>
+
+    <!-- Service Locator Component -->
+    <property name="servicelocator.home" value="${components.basedir}/servicelocator"/>
+    <property name="servicelocator.jar" value="${servicelocator.home}/build/servicelocator.jar"/>
+
+    <!-- Tracer Component -->
+    <property name="tracer.home" value="${components.basedir}/util/tracer"/>
+    <property name="tracer.jar" value="${tracer.home}/build/tracer.jar"/>
+
+    <!-- Entities Component -->
+    <property name="entities.home" value="${components.basedir}/entities"/>
+    <property name="entities.ejb.jar" value="${entities.home}/build/entities-ejb.jar"/>
+    <property name="entities.dto.jar" value="${entities.home}/build/entities-dto.jar"/>
+
+    <!-- Customer Component -->
+    <property name="customer.home" value="${components.basedir}/customer"/>
+    <property name="customer.ejb.jar" value="${customer.home}/build/customer-ejb.jar"/>
+    <property name="customer.client.jar" value="${customer.home}/build/customer-ejb-client.jar"/>
+
+    <!-- Offer Component -->
+    <property name="offer.home" value="${components.basedir}/offer"/>
+    <property name="offer.ejb.jar" value="${offer.home}/build/offer-ejb.jar"/>
+    <property name="offer.client.jar" value="${offer.home}/build/offer-ejb-client.jar"/>
+
+    <!-- Message Component -->
+    <property name="message.home" value="${components.basedir}/message"/>
+    <property name="message.ejb.jar" value="${message.home}/build/message-ejb.jar"/>
+
+    <!-- WAF -->
+    <property name="waf.home" value="../../../waf"/>
+    <property name="waf.web.jar" value="${waf.home}/build/waf-web.jar"/>
+
+    <!-- The classpath for components. -->
+    <path id="components.classpath">
+     <pathelement location="${servicelocator.jar}"/>
+     <pathelement location="${signon.jar}"/>
+     <pathelement location="${signon.client.jar}"/>
+     <pathelement location="${tracer.jar}"/>
+     <pathelement location="${waf.web.jar}"/>
+     <pathelement location="${customer.client.jar}"/>
+     <pathelement location="${offer.client.jar}"/>
+     <pathelement location="${entities.dto.jar}"/>
+    </path>
+
+    <!-- The classpath used for building the workspace. -->
+   <path id="classpath">
+     <path refid="compile.classpath" />
+     <path refid="components.classpath" />
+   </path>
+
+  <target name="compile">
+    <mkdir dir="${build.classes}"/>
+    <javac srcdir="${src}" destdir="${build.classes}">
+     <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="war">     
+    <delete dir="${build.temp}"/>
+    <mkdir dir="${build.temp}"/>
+    <!-- copy the docroot -->
+    <copy todir="${build.temp}">
+     <fileset dir="${docroot}" excludes="**/cvs/**" />
+    </copy>
+    <!-- Copy in the auction Builder Web Classes -->
+    <copy todir="${build.temp}/WEB-INF/classes">
+     <fileset dir="${build.classes}" excludes="**/cvs/**" />
+    </copy>
+    <!-- Copy in the WAF controllers-->
+    <copy file="${waf.web.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the Service Locator-->
+    <copy file="${servicelocator.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the tracer-->
+    <copy file="${tracer.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the signon component-->
+    <copy file="${signon.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <copy file="${signon.client.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the customer component-->
+    <copy file="${customer.client.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the offer component-->
+    <copy file="${offer.client.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the entities component-->
+    <copy file="${entities.dto.jar}" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy in the Taglib TLDs and jars  -->
+    <copy file="${waf.home}/src/waftags.tld" todir="${build.temp}/WEB-INF" />
+    <copy file="${waf.home}/src/template.tld" todir="${build.temp}/WEB-INF" />
+    <copy file="${jstl.lib}/c-rt.tld" todir="${build.temp}/WEB-INF" />
+    <copy file="${jstl.lib}/sql-rt.tld" todir="${build.temp}/WEB-INF" />
+    <copy file="${jstl.lib}/fmt-rt.tld" todir="${build.temp}/WEB-INF" />
+    <copy file="screendefinitions_en_GB.xml" todir="${build.temp}/WEB-INF" />
+    <copy file="mappings.xml" todir="${build.temp}/WEB-INF" />
+    <copy file="${jstl.lib}/standard.jar" todir="${build.temp}/WEB-INF/lib" />
+    <copy file="${jstl.lib}/jstl.jar" todir="${build.temp}/WEB-INF/lib" />
+    <!-- Copy other necessary configuration files into the /WEB-INF -->
+    <copy file="signon-config.xml" todir="${build.temp}/WEB-INF" />
+    <copy file="web.xml" todir="${build.temp}/WEB-INF" />
+    <!-- make the war file -->
+    <delete file="${build.dir}/auction.war"/>
+    <jar jarfile="${build.dir}/auction.war" basedir="${build.temp}" />
+    <delete dir="${build.temp}"/>
+  </target>
+
+ <target name="ear">
+    <delete dir="${build.temp}"/>
+    <mkdir dir="${build.temp}"/>
+    <mkdir dir="${build.temp}/META-INF"/>
+    <copy file="application.xml" todir="${build.temp}/META-INF/" />
+    <copy file="sun-j2ee-ri.xml" todir="${build.temp}/META-INF/" />
+    <copy file="${build.dir}/auction.war" todir="${build.temp}" />
+    <copy file="${signon.ejb.jar}" todir="${build.temp}" />
+    <copy file="${entities.ejb.jar}" todir="${build.temp}" />
+    <copy file="${customer.ejb.jar}" todir="${build.temp}" />
+    <copy file="${offer.ejb.jar}" todir="${build.temp}" />
+    <copy file="${message.ejb.jar}" todir="${build.temp}" />
+    <delete file="${application.module}"/>
+    <jar jarfile="${application.module}" basedir="${build.temp}" />
+    <delete dir="${build.temp}"/>
+  </target>
+  
+  <target name="core" depends="banner,compile,war,ear" />
+
+</project>
+

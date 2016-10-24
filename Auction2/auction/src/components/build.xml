@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="components" default="core" basedir=".">
+
+  <target name="all" depends="core"/>
+
+  <target name="core">
+    <ant dir="entities/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="servicelocator/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="util/tracer/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="signon/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="customer/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="offer/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="message/src" target="core" inheritAll="false" inheritRefs="false"/>
+  </target>
+
+</project>

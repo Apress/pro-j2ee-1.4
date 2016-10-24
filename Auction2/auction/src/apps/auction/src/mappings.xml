@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<mappings>
+
+   <url-mapping url="customerEdit.do" screen="customer_edit.screen" >
+        <web-action-class>com.wrox.auction.web.actions.customer.CustomerEditAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="customerUpdate.do" screen="action_success.screen" >
+        <web-action-class>com.wrox.auction.web.actions.customer.CustomerUpdateAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="customerCreate.do" screen="action_success.screen" >
+        <web-action-class>com.wrox.auction.web.actions.customer.CustomerCreateAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="offerSearch.do" screen="offer_search.screen" >
+        <web-action-class>com.wrox.auction.web.actions.offer.OfferSearchAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="offerList.do" screen="offer_list.screen" >
+        <web-action-class>com.wrox.auction.web.actions.offer.OfferListAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="offerCreate.do" screen="action_success.screen" >
+        <web-action-class>com.wrox.auction.web.actions.offer.OfferCreateAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="offerUpdate.do" screen="action_success.screen" >
+        <web-action-class>com.wrox.auction.web.actions.offer.OfferUpdateAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="offerRemove.do" screen="action_success.screen" >
+        <web-action-class>com.wrox.auction.web.actions.offer.OfferRemoveAction</web-action-class>
+   </url-mapping>
+
+   <url-mapping url="offerBid.do" screen="action_success.screen" >
+        <web-action-class>com.wrox.auction.web.actions.offer.OfferBidAction</web-action-class>
+   </url-mapping>
+
+   <exception-mapping exception-class="com.wrox.auction.web.actions.customer.CustomerUpdateException" screen="customer_edit.screen"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.customer.CustomerCreateException" screen="customer_create.screen"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.customer.CustomerEditException" screen="blank.screen"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.offer.OfferListException" screen="blank.screen"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.offer.OfferCreateException" screen="offer_create.screen"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.offer.OfferUpdateException" screen="offerList.do"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.offer.OfferRemoveException" screen="offerList.do"/>
+   <exception-mapping exception-class="com.wrox.auction.web.actions.offer.OfferBidException" screen="blank.screen"/>
+
+</mappings>

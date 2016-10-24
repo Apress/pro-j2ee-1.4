@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+    <!ENTITY database SYSTEM "file:./src/config/database/cloudscape.xml">
+]>
+
+<project name="Acme Entities" default="ejbdoclet" basedir=".">
+
+  <!-- Import Cloudscape Properties -->
+  &database;
+
+  <!-- Middlegen Home -->
+  <property name="middlegen.home" value="c:/meeraj/software/middlegen-2.0-b1"/>
+
+  <!-- J2EE Home -->
+  <property name="j2ee.home" value="c:/meeraj/software/j2sdkee1.4"/>
+
+  <property name="lib.dir" value="${middlegen.home}/samples/lib"/>
+
+  <property name="src.dir" value="${basedir}/src"/>
+  <property name="java.src.dir" value="${src.dir}/java"/>
+  <property name="web.src.dir"  value="${src.dir}/web"/>
+
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="build.java.dir" value="${build.dir}/java"/>
+  <property name="build.gen-src.dir" value="${build.dir}/gen-src"/>
+  <property name="build.gen-webui.dir" value="${build.dir}/gen-webui"/>
+  <property name="build.classes.dir" value="${build.dir}/classes"/>
+  <property name="build.ejb-meta.dir" value="${build.dir}/ejb-meta"/>
+  <property name="ejb.dir" value="${build.dir}/ejb"/>
+  <property name="ejb.jar.file" value="${ejb.dir}/${unique.name}-ejb.jar"/>
+
+  <property name="name" value="com.wrox.auction.entity"/>
+
+  <!-- Set the classpath -->
+  <path id="lib.class.path">
+    <pathelement path="${database.driver.classpath}"/>
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${middlegen.home}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- Run Middlegen -->
+  <target name="middlegen" description="Run Middlegen">
+
+    <mkdir dir="${build.gen-src.dir}"/>
+
+    <taskdef
+      name="middlegen"
+      classname="middlegen.MiddlegenTask"
+      classpathref="lib.class.path"
+    />
+
+    <middlegen
+      appname="${name}"
+      prefsdir="${src.dir}"
+      gui="false"
+      databaseurl="${database.url}"
+      initialContextFactory="${java.naming.factory.initial}"
+      providerURL="${java.naming.provider.url}"
+      datasourceJNDIName="${name}.database"
+      driver="${database.driver}"
+      username="${database.userid}"
+      password="${database.password}"
+    >
+
+      <cmp20
+        destination="${build.gen-src.dir}"
+        package="${name}.ejb"
+        interfacepackage="${name}.interfaces"
+        pkclass="false"
+        dataobject="true"
+        viewtype="local"
+        mergedir="${basedir}/src/middlegen"
+        readonly="false"
+        fkcmp="false"
+        guid="false"
+      />
+    </middlegen>
+
+    <mkdir dir="${build.classes.dir}"/>
+  </target>
+
+  <!-- Run EJB Doclet -->
+  <target 
+    name="ejbdoclet" 
+    depends="middlegen"
+  >
+    <mkdir dir="${build.ejb-meta.dir}"/>
+
+    <taskdef
+      name="ejbdoclet"
+      classname="xdoclet.modules.ejb.EjbDocletTask"
+      classpathref="lib.class.path"
+    />
+
+    <ejbdoclet
+      destdir="${build.gen-src.dir}"
+      excludedtags="@version,@author"
+      ejbspec="2.0"
+    >
+         
+      <packageSubstitution packages="ejb" substituteWith="interfaces"/>
+
+      <fileset dir="${build.gen-src.dir}">
+        <include name="**/ejb/**/*Bean.java" />
+      </fileset>
+
+      <localinterface/>
+      <localhomeinterface/>
+      <entitycmp/>
+      <dataobject/>
+      <deploymentdescriptor
+        xmlencoding="ISO-8859-1"
+        destdir="${build.ejb-meta.dir}/META-INF" 
+        validatexml="true"
+      />
+    </ejbdoclet>
+  </target>
+
+</project>

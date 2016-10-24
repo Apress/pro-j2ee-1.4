@@ -1,0 +1,33 @@
+  <!-- include properties overrides specific to this build file -->
+  <property file="build.properties"/>
+
+  <!-- include top-level common properties -->
+  <property file="${root.dir}/build.properties"/>
+
+  <!-- The destination directory for all the compiled classes -->
+  <property name="classes.dir" value="${build.dir}/classes"/>
+
+  <!-- include app-server specific ant commands  -->
+  &appServerAntCommands; 
+
+  <!-- classpath for compilation -->
+  <path id="compile.classpath">
+    <pathelement location="${classes.dir}"/>
+    <path refid="j2ee.classpath" />
+  </path>
+
+  <!-- Cleans the build directory -->
+  <target name="clean" description="Removes the build directory">
+    <fail unless="build.dir" message="build.dir must be set before invoking this target"/>
+    <delete dir="${build.dir}" />
+  </target>
+
+  <!-- Prints the banner -->
+  <target name="banner" if="banner.title">
+    <echo>+---------------------------------------+</echo>
+    <echo>+    ${banner.title}           </echo>
+    <echo>+---------------------------------------+</echo>
+  </target>
+
+  
+

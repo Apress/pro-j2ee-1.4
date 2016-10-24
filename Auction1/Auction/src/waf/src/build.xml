@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<!-- Copyright 2002 Sun Microsystems, Inc. All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 
+ - Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ 
+ - Redistribution in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in
+   the documentation and/or other materials provided with the
+   distribution.
+ 
+ Neither the name of Sun Microsystems, Inc. or the names of
+ contributors may be used to endorse or promote products derived
+ from this software without specific prior written permission.
+ 
+ This software is provided "AS IS," without a warranty of any
+ kind. ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND
+ WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY
+ EXCLUDED. SUN AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES
+ SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR
+ DISTRIBUTING THE SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL SUN
+ OR ITS LICENSORS BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR
+ FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR
+ PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF
+ LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE,
+ EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ 
+ You acknowledge that Software is not designed, licensed or intended
+ for use in the design, construction, operation or maintenance of
+ any nuclear facility.
+ $Id: build.xml,v 1.7 2002/11/20 20:45:27 gmurray Exp $ -->
+
+<!DOCTYPE project [
+  <!ENTITY commonAntCommands SYSTEM "file:../../config/common-ant.xml">
+  <!ENTITY appServerAntCommands SYSTEM "file:../../config/app-server-ant.xml">
+]>
+<project name="waf" default="core" basedir=".">
+
+  
+
+  <!-- The root directory of the workspace -->
+  <property name="waf.home" value=".."/>
+
+  <!-- The destination directories for the build -->
+  <property name="waf.src" value="${waf.home}/src"/>
+  <property name="build.dir" value="${waf.home}/build"/>
+  <property name="build.dirjardir" value="${waf.home}/build/ejbjar"/>
+  <property name="waf.temp.jar.build" value="${build.dir}/waftemp"/>
+  <property name="waf.lib" value="${waf.home}/src/lib"/>
+  <property name="waf.classbindir" value="${build.dir}/classes"/>
+  <property name="waf.component.basedir" value="../../components"/>
+  <property name="waf.srcdocroot" value="${waf.src}/docroot"/>
+  <property name="waf.web.lib" value="${waf.srcdocroot}/WEB-INF/lib"/>
+  <property name="waf.web.classes" value="${waf.srcdocroot}/WEB-INF/classes"/>
+  <property name="waf.ejbjar" value="waf-ejb.jar"/>
+  <property name="waf.ejbjar.client" value="waf-ejb-client.jar"/>
+
+  <!-- Base64 Encoder/Decoder -->
+  <property name="waf.base64.jar" value="../../lib/base64/base64.jar"/>
+
+  <!-- Tracer Component -->
+  <property name="waf.tracer.home" value="../../components/util/tracer"/>
+  <property name="waf.tracer.jar" value="${waf.tracer.home}/build/tracer.jar"/>
+
+  <!-- Service Locator Component -->
+  <property name="waf.servicelocator.home" value="../../components/servicelocator"/>
+  <property name="waf.servicelocator.jar" value="${waf.servicelocator.home}/build/servicelocator.jar"/>
+
+  <!-- Title displayed on the banner when this component is built -->
+  <property name="banner.title" value="Building Web Application Framework"/>
+
+  <!-- include common ant commands -->
+  &commonAntCommands; 
+
+  <!-- The classpath for components. -->
+  <path id="waf.components.classpath">
+    <pathelement location="${waf.servicelocator.jar}"/>
+    <pathelement location="${waf.tracer.jar}"/>
+    <pathelement location="${waf.classbindir}"/>
+    <pathelement location="${waf.base64.jar}"/>
+  </path>
+
+  <!-- The classpath used for building the workspace. -->
+  <path id="waf.classpath">
+    <pathelement location="${waf.classbindir}"/>
+    <path refid="compile.classpath" />
+    <path refid="waf.components.classpath" />
+  </path>
+
+  <target name="compile">
+    <mkdir dir="${waf.classbindir}"/>
+    <javac srcdir="${waf.src}"
+           destdir="${waf.classbindir}"
+           includes="controller/com/**">
+     <classpath refid="waf.classpath"/>
+    </javac>
+    <!-- Templating -->
+    <javac srcdir="${waf.src}"
+           destdir="${waf.classbindir}"
+           includes="view/template/com/**">
+     <classpath refid="waf.classpath"/>
+    </javac>
+    <!-- TagLibs -->
+    <javac srcdir="${waf.src}"
+           destdir="${waf.classbindir}"
+           includes="view/taglibs/com/**">
+     <classpath refid="waf.classpath"/>
+    </javac>
+  </target>
+
+  <target name="web-client">
+    <!-- Build the WAF  jar -->
+    <mkdir dir="${waf.temp.jar.build}"/>
+    <unjar src="${waf.base64.jar}"  dest="${waf.classbindir}" />
+    <copy todir="${waf.temp.jar.build}">
+     <fileset dir="${waf.classbindir}" excludes="**/ejb/**" />
+    </copy>
+    <jar jarfile="${build.dir}/waf-web.jar"  basedir="${waf.temp.jar.build}" />
+    <delete dir="${waf.temp.jar.build}"/>
+  </target>
+
+  <target name="ejbjar">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.dirjardir}/META-INF"/>
+    <copy todir="${build.dirjardir}" >
+     <fileset dir= "${waf.classbindir}">
+      <exclude name="**/web/**"/>
+     </fileset>
+    </copy>
+    <copy file="${waf.src}/ejb-jar.xml" tofile="${build.dirjardir}/META-INF/ejb-jar.xml" />
+    <delete file="${build.dir}/${waf.ejbjar}"/>
+    <jar jarfile="${build.dir}/${waf.ejbjar}" basedir="${build.dirjardir}" excludes="**/web/**, **/view/**">
+     <manifest>
+      <attribute name="Class-Path" value="tracer.jar servicelocator.jar"/>
+     </manifest>
+     </jar>
+    <delete dir="${build.dirjardir}"/>
+  </target>
+
+  <target name="ejbclientjar">
+    <delete dir="${build.dirjardir}"/>
+    <mkdir dir="${build.dirjardir}"/>
+    <copy todir="${build.dirjardir}" >
+     <fileset dir= "${waf.classbindir}">
+      <include name="**/controller/ejb/**"/>
+      <exclude name="**/web/**"/>
+      <exclude name="**/view/**"/>
+      <exclude name="**/ejb/action/**"/>
+      <exclude name="**/ejb/StateMachine.class"/>
+      <exclude name="**/ejb/EJBClientControllerEJB.class"/>
+     </fileset>
+    </copy>
+    <delete file="${build.dir}/${waf.ejbjar.client}"/>
+    <jar jarfile="${build.dir}/${waf.ejbjar.client}" basedir="${build.dirjardir}" excludes="**/web/**"/>
+    <delete dir="${build.dirjardir}"/>
+  </target>
+
+  <target name="dependencies">
+    <ant dir="${waf.tracer.home}/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="${waf.servicelocator.home}/src" target="core" inheritAll="false" inheritRefs="false"/>
+  </target>
+
+  <target name="core" depends="banner,compile,web-client,ejbclientjar,ejbjar" />
+</project>
+

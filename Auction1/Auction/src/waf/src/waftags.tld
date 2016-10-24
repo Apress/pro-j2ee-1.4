@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+ PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+ "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+
+<!-- a tag library descriptor -->
+
+<taglib>
+
+  <tlibversion>1.0</tlibversion>
+  <jspversion>1.1</jspversion>
+  <shortname>WafTags</shortname>
+  <uri></uri>
+
+  <info>
+    BluePrints Web Application Framework Tags
+  </info>
+
+
+  <!-- client  cache link tag -->
+  <tag>
+    <name>client_cache_link</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.ClientStateTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+     This tag caches state in the page and provides a button or
+     image link within a form with the current page parameters
+     and the page request attributes by encoding them as hidden
+     form variables that are serialized using Base 64 Encoded Strings.
+
+     This tag when used along with a front controller such as the
+     one provided in the WAF can utilize a flow handler to forward
+     a request page to a page with the same attributes it recieved
+     when the original request was made.
+    </info>
+
+
+    <attribute>
+      <name>id</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>targetURL</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>encodeRequestParameters</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>alt</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>encodeRequestAttributes</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>buttonText</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>imageURL</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+  </tag>
+
+  <!-- client  cache link value tag -->
+  <tag>
+    <name>param</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.ClientStateValueTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+     This tag is used to specify a parameter to be used along with the client cache link tag.
+    </info>
+
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>value</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+  </tag>
+
+  <!-- cache tag -->
+  <tag>
+    <name>cache</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.CacheTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      Enables content to be refresh only after a specific amount of time.
+    </info>
+
+    <attribute>
+      <name>scope</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>duration</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+
+  <!-- form tag -->
+  <tag>
+    <name>form</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.FormTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      Provides a form that can have input validated upon submission
+    </info>
+
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>action</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>method</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+  <!-- checkbox tag -->
+  <tag>
+    <name>checkbox</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.CheckboxTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      Enhanced version of the html Checkbox input tag
+    </info>
+
+
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+
+
+  <!-- checkbox checked tag -->
+  <tag>
+    <name>checked</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.CheckedTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      To be used with the checkbox to specify whether or not the tag is to be checked
+    </info>
+
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+  <!-- input tag -->
+  <tag>
+    <name>input</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.InputTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      An input field that can be validated. Use with form tag.
+    </info>
+
+    <attribute>
+      <name>type</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>size</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>name</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>validation</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>maxlength</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>cssClass</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>value</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+  <!-- name tag -->
+  <tag>
+    <name>name</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.NameTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      <!-- FIXME -->
+    </info>
+  </tag>
+
+  <!-- value tag -->
+  <tag>
+    <name>value</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.ValueTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      <!-- FIXME -->
+    </info>
+  </tag>
+
+  <!-- select tag -->
+  <tag>
+    <name>select</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.SelectTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      <!-- FIXME -->
+    </info>
+
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>size</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+
+    <attribute>
+      <name>editable</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+  <!-- selected tag -->
+  <tag>
+    <name>selected</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.SelectedTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      <!-- FIXME -->
+    </info>
+  </tag>
+
+  <!-- option tag -->
+  <tag>
+    <name>option</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.taglibs.smart.OptionTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+      <!-- FIXME -->
+    </info>
+
+    <attribute>
+      <name>value</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+</taglib>

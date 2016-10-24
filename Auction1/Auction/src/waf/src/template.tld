@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+ PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+ "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+
+<!-- a tag library descriptor -->
+
+<taglib>
+  <tlibversion>1.0</tlibversion>
+  <jspversion>1.1</jspversion>
+  <shortname>waftemplate</shortname>
+  <uri></uri>
+
+  <info>
+    BluePrints Web Application Framework Template Tags
+  </info>
+
+  <!-- Template insert tag -->
+  <tag>
+    <name>insert</name>
+    <tagclass>com.sun.j2ee.blueprints.waf.view.template.InsertTag</tagclass>
+
+    <bodycontent>JSP</bodycontent>
+    <info>
+	An insertion tag
+    </info>
+
+    <attribute>
+      <name>id</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>parameter</name>
+      <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+</taglib>

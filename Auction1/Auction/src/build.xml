@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+  <!ENTITY commonAntCommands SYSTEM "file:./config/common-ant.xml">
+  <!ENTITY appServerAntCommands SYSTEM "file:./config/app-server-ant.xml">
+]>
+
+<project name="Acme Auction" default="core" basedir=".">
+
+  <!-- path to root -->
+  <property name="root.dir" value="."/>
+
+  <!-- include common ant commands -->
+  &commonAntCommands; 
+
+  <target name="core">
+    <ant dir="components" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="waf/src" target="core" inheritAll="false" inheritRefs="false"/>
+    <ant dir="apps/auction/src" target="core" inheritAll="false" inheritRefs="false"/> 
+  </target>
+
+  <target name="deploy-apps">
+    <ant dir="apps" target="deploy-apps" inheritAll="false" inheritRefs="false"/>     
+  </target>
+
+  <target name="verify">
+    <ant dir="apps" target="verify" inheritAll="false" inheritRefs="false"/>     
+  </target>
+
+  <target name="undeploy-apps">
+    <ant dir="apps" target="undeploy-apps" inheritAll="false" inheritRefs="false"/>
+  </target>
+
+  <target name="cleanall">
+    <ant dir="components" target="clean" inheritAll="false" inheritRefs="false"/>
+    <ant dir="waf/src" target="clean" inheritAll="false" inheritRefs="false"/>
+    <ant dir="apps/auction/src" target="clean" inheritAll="false" inheritRefs="false"/>
+  </target>
+
+</project>

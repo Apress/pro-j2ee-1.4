@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<ejb-jar version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+
+  <display-name>OfferJar</display-name>
+  <enterprise-beans>
+    <session>
+      <display-name>OfferController</display-name>
+      <ejb-name>OfferController</ejb-name>
+      <home>com.wrox.auction.offer.client.OfferControllerHome</home>
+      <remote>com.wrox.auction.offer.client.OfferController</remote>
+      <ejb-class>com.wrox.auction.offer.ejb.OfferControllerEJB</ejb-class>
+      <session-type>Stateless</session-type>
+      <transaction-type>Container</transaction-type>
+      <env-entry>
+        <env-entry-name>delay</env-entry-name>
+        <env-entry-type>java.lang.Long</env-entry-type>
+        <env-entry-value>30000</env-entry-value>
+      </env-entry>
+      <env-entry>
+        <env-entry-name>interval</env-entry-name>
+        <env-entry-type>java.lang.Long</env-entry-type>
+        <env-entry-value>30000</env-entry-value>
+      </env-entry>
+      <ejb-local-ref>
+        <ejb-ref-name>ejb/offer</ejb-ref-name>
+        <ejb-ref-type>Entity</ejb-ref-type>
+        <local-home>com.wrox.auction.entity.interfaces.OfferLocalHome</local-home>
+        <local>com.wrox.auction.entity.interfaces.OfferLocal</local>
+        <ejb-link>Offer</ejb-link>
+      </ejb-local-ref>
+      <ejb-local-ref>
+        <ejb-ref-name>ejb/customer</ejb-ref-name>
+        <ejb-ref-type>Entity</ejb-ref-type>
+        <local-home>com.wrox.auction.entity.interfaces.CustomerLocalHome</local-home>
+        <local>com.wrox.auction.entity.interfaces.CustomerLocal</local>
+        <ejb-link>Customer</ejb-link>
+      </ejb-local-ref>
+      <ejb-local-ref>
+        <ejb-ref-name>ejb/bid</ejb-ref-name>
+        <ejb-ref-type>Entity</ejb-ref-type>
+        <local-home>com.wrox.auction.entity.interfaces.BidLocalHome</local-home>
+        <local>com.wrox.auction.entity.interfaces.BidLocal</local>
+        <ejb-link>Bid</ejb-link>
+      </ejb-local-ref>
+      <resource-ref>
+        <res-ref-name>jms/qcf</res-ref-name>
+        <res-type>javax.jms.QueueConnectionFactory</res-type>
+        <res-auth>Container</res-auth>
+        <res-sharing-scope>Shareable</res-sharing-scope>
+      </resource-ref>
+      <message-destination-ref>
+        <message-destination-ref-name>jms/bidQueue</message-destination-ref-name>
+        <message-destination-type>javax.jms.Queue</message-destination-type>
+        <message-destination-usage>Produces</message-destination-usage>
+        <message-destination-link>LogicalQueue</message-destination-link>
+      </message-destination-ref>
+   </session>
+
+  </enterprise-beans>
+
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>OfferController</ejb-name>
+        <method-name>*</method-name>
+        <method-params/>
+      </method>
+      <trans-attribute>RequiresNew</trans-attribute>
+    </container-transaction>
+    <message-destination>
+      <message-destination-name>LogicalQueue</message-destination-name>
+    </message-destination>
+  </assembly-descriptor>
+
+</ejb-jar>
+
+

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2002 Sun Microsystems, Inc. All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 
+ - Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ 
+ - Redistribution in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in
+   the documentation and/or other materials provided with the
+   distribution.
+ 
+ Neither the name of Sun Microsystems, Inc. or the names of
+ contributors may be used to endorse or promote products derived
+ from this software without specific prior written permission.
+ 
+ This software is provided "AS IS," without a warranty of any
+ kind. ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND
+ WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY
+ EXCLUDED. SUN AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES
+ SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR
+ DISTRIBUTING THE SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL SUN
+ OR ITS LICENSORS BE LIABLE FOR ANY LOST REVENUE, PROFIT OR DATA, OR
+ FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR
+ PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF
+ LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE,
+ EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ 
+ You acknowledge that Software is not designed, licensed or intended
+ for use in the design, construction, operation or maintenance of
+ any nuclear facility.
+ $Id: web.xml,v 1.8 2002/11/21 01:46:21 vijaysr Exp $ -->
+
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" 
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+  <display-name>AdventureBuilderWebWAR</display-name>
+ 
+  <!-- Signon Filter Declaration Start -->
+  <filter>
+    <filter-name>SignOnFilter</filter-name>
+    <filter-class>com.sun.j2ee.blueprints.signon.web.SignOnFilter</filter-class>
+  </filter>
+  <!-- Signon Filter Declaration End -->
+  
+  <!-- Signon Filter Mapping Start-->
+  <filter-mapping>
+    <filter-name>SignOnFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- Signon Filter Mapping Complete-->
+
+  <!-- Component Manager Initialization  
+       The Component Manager is a SessionListener and ensures
+       that all the necessary objects required for a user are
+       initialized when a new user session is initiated.
+  -->
+  <listener>
+   <listener-class>com.wrox.auction.web.model.AuctionComponentManager</listener-class>
+  </listener>
+
+
+  
+  <servlet>
+    <servlet-name>webTierEntryPoint</servlet-name>
+    <servlet-class>com.sun.j2ee.blueprints.waf.controller.web.MainServlet</servlet-class>
+    <init-param>
+      <param-name>default_locale</param-name>
+      <param-value>en_GB</param-value>
+    </init-param>
+  </servlet>
+  
+  <!-- Template Servlet Configuration -->
+  <servlet>
+    <servlet-name>TemplateServlet</servlet-name>
+    <servlet-class>com.sun.j2ee.blueprints.waf.view.template.TemplateServlet</servlet-class>
+    <init-param>
+      <param-name>locales</param-name>
+      <param-value>en_GB</param-value>
+    </init-param>
+    <init-param>
+      <param-name>default_locale</param-name>
+      <param-value>en_GB</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cache_previous_screen_attributes</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>cache_previous_screen_parameters</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>webTierEntryPoint</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Template Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>TemplateServlet</servlet-name>
+    <url-pattern>*.screen</url-pattern>
+  </servlet-mapping>
+  <!-- Template Servlet Configuration Complete -->
+
+   <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- Adventure Builder Component Manager Class  -->
+  <env-entry>
+    <description>Define the implementation class of the Component Manager</description>
+    <env-entry-name>param/ComponentManager</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>com.sun.j2ee.blueprints.adventure.web.AuctionComponentManager</env-entry-value>
+  </env-entry>
+
+  <!-- Reference for sign-on controller -->
+  <ejb-ref>
+    <ejb-ref-name>ejb/signonController</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <home>com.wrox.auction.signon.client.SignOnControllerHome</home>
+    <remote>com.wrox.auction.signon.client.SignOnController</remote>
+    <ejb-link>SignOnController</ejb-link>
+  </ejb-ref>
+
+  <!-- Reference for customer controller -->
+  <ejb-ref>
+    <ejb-ref-name>ejb/customerController</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <home>com.wrox.auction.customer.client.CustomerControllerHome</home>
+    <remote>com.wrox.auction.customer.client.CustomerController</remote>
+    <ejb-link>CustomerController</ejb-link>
+  </ejb-ref>
+
+  <!-- Reference for offer controller -->
+  <ejb-ref>
+    <ejb-ref-name>ejb/offerController</ejb-ref-name>
+    <ejb-ref-type>Session</ejb-ref-type>
+    <home>com.wrox.auction.offer.client.OfferControllerHome</home>
+    <remote>com.wrox.auction.offer.client.OfferController</remote>
+    <ejb-link>OfferController</ejb-link>
+  </ejb-ref>
+
+</web-app>
+

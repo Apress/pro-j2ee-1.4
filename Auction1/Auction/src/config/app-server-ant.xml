@@ -1,0 +1,53 @@
+  <property name="j2ee.home" value="C:\Sun\AppServer"/>
+  <property name="j2ee.server.port" value="8000"/>
+  <property name="j2ee.server.name" value="localhost"/>
+
+  <target name="tools">
+    <condition property="j2ee-script-suffix" value=".bat">
+      <os family="windows"/>
+    </condition>
+    <condition property="j2ee-script-suffix" value="">
+      <not>
+        <os family="windows"/>
+      </not>
+    </condition>
+    <!-- setup properties for various J2EE tools -->
+    <property name="deploytool" value="${j2ee.home}/bin/deploytool${j2ee-script-suffix}"/>
+    <property name="packager" value="${j2ee.home}/bin/packager${j2ee-script-suffix}"/>
+    <property name="admintool" value="${j2ee.home}/bin/asadmin${j2ee-script-suffix}"/>
+    <property name="keytool" value="${j2ee.home}/bin/keytool${j2ee-script-suffix}"/>
+    <property name="realmtool" value="${j2ee.home}/bin/realmtool${j2ee-script-suffix}"/>
+    <property name="wscompile" value="${j2ee.home}/bin/wscompile${j2ee-script-suffix}"/>
+  </target>
+
+  <!-- Construct J2EE classpath -->
+  <path id="j2ee.classpath">
+    <pathelement location="${j2ee.home}/lib/j2ee.jar"/>
+    <pathelement location="${j2ee.home}/lib/j2eetools.jar"/>
+    <pathelement location="${j2ee.home}/lib/j2ee-ri-svc.jar"/>
+    <pathelement location="${j2ee.home}/lib/jhall.jar"/>
+    <pathelement location="${j2ee.home}/bin"/>
+  </path>
+
+  <!-- Construct database classpath -->
+  <path id="database.classpath">
+    <pathelement location="${j2ee.home}/lib/cloudscape/RmiJdbc.jar"/>
+    <pathelement location="${j2ee.home}/lib/cloudscape/cloudclient.jar"/>
+    <pathelement location="${j2ee.home}/lib/cloudscape/cloudview.jar"/>
+    <pathelement location="${j2ee.home}/lib/system/cloudscape.jar"/>
+    <pathelement location="${j2ee.home}/lib/system/cloudutil.jar"/>
+  </path>
+
+  <target name="deploy" depends="tools">
+    <fail unless="application.module" message="application.module must be set before invoking this target."/>
+    <exec executable="${deploytool}">
+      <arg line="-deployModule ${application.module}"/>
+    </exec> 
+  </target>
+
+  <target name="generateSQL" depends="tools">
+    <fail unless="application.module" message="application.module must be set before invoking this target."/>
+    <exec executable="${deploytool}">
+      <arg line="-generateSQL ${application.module} localhost"/>
+    </exec> 
+  </target>

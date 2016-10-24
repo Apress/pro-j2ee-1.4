@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+  <!ENTITY commonAntCommands SYSTEM "file:../../../config/common-ant.xml">
+  <!ENTITY appServerAntCommands SYSTEM "file:../../../config/app-server-ant.xml">
+]>
+<project name="Customer" default="core" basedir=".">  
+
+  <!-- The root directory of the workspace -->
+  <property name="home" value=".."/>
+
+  <!-- Source directory -->
+  <property name="src" value="${home}/src"/>
+
+  <!-- Build directories -->
+  <property name="build.dir" value="${home}/build"/>
+  <property name="build.temp.jar" value="${build.dir}/temp"/>
+  <property name="build.classes" value="${build.dir}/classes"/>
+
+  <!-- Component JAR files created -->
+  <property name="dist.ejb.jar" value="customer-ejb.jar"/>
+  <property name="dist.client.jar" value="customer-ejb-client.jar"/>
+
+  <!-- Tracer Component -->
+  <property name="tracer.jar" value="../../util/tracer/build/tracer.jar"/>
+
+  <!-- Service Locator Component -->
+  <property name="servicelocator.jar" value="../../servicelocator/build/servicelocator.jar"/>
+
+  <!-- Entities Component -->
+  <property name="entities.jar" value="../../entities/build/entities-ejb.jar"/>
+
+  <!-- Title displayed on the banner when this component is built -->
+  <property name="banner.title" value="Building Customer Component"/>
+
+  <!-- include common ant commands -->
+  &commonAntCommands; 
+
+  <!-- The classpath for components. -->
+  <path id="components.classpath">
+    <pathelement location="${servicelocator.jar}"/>
+    <pathelement location="${tracer.jar}"/>
+    <pathelement location="${entities.jar}"/>
+  </path>
+
+  <!-- The classpath used for building the workspace. -->
+  <path id="classpath">
+    <pathelement location="${build.classes}"/>
+    <path refid="compile.classpath" />
+    <path refid="components.classpath" />
+  </path>
+
+  <target name="compile">
+    <mkdir dir="${build.classes}"/>
+    <javac srcdir="${src}" destdir="${build.classes}">
+     <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="ejbjar">
+    <mkdir dir="${build.temp.jar}"/>
+    <mkdir dir="${build.temp.jar}/META-INF"/>
+    <copy todir="${build.temp.jar}" >
+     <fileset dir= "${build.classes}">
+      <exclude name="**/*Delegate.class"/>
+     </fileset>
+    </copy>
+    <copy file="${src}/ejb-jar.xml" tofile="${build.temp.jar}/META-INF/ejb-jar.xml" />
+    <delete file="${build.dir}/${dist.ejb.jar}"/>
+    <jar jarfile="${build.dir}/${dist.ejb.jar}" basedir="${build.temp.jar}">
+     <manifest>
+      <attribute name="Class-Path" value="tracer.jar servicelocator.jar entities-ejb.jar"/>
+     </manifest>
+     </jar>
+    <delete dir="${build.temp.jar}"/>
+  </target>
+
+  <target name="ejbclientjar">
+    <mkdir dir="${build.temp.jar}"/>
+    <copy todir="${build.temp.jar}" >
+     <fileset dir= "${build.classes}">
+      <exclude name="**/ejb/**"/>
+     </fileset>
+    </copy>
+    <delete file="${build.dir}/${dist.client.jar}"/>
+    <jar jarfile="${build.dir}/${dist.client.jar}" basedir="${build.temp.jar}"/>
+    <delete dir="${build.temp.jar}"/>
+  </target>
+
+  <target name="core" depends="banner,compile,ejbjar,ejbclientjar" />
+
+</project>

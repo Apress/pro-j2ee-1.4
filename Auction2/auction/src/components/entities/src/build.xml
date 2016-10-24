@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+  <!ENTITY commonAntCommands SYSTEM "../../../config/common-ant.xml">
+  <!ENTITY appServerAntCommands SYSTEM "../../../config/app-server-ant.xml">
+]>
+
+<project name="ENtities" default="core" basedir="."> 
+
+  <!-- The root directory of the workspace -->
+  <property name="home" value=".."/>
+
+  <!-- Source directory -->
+  <property name="src" value="${home}/src"/>
+
+  <!-- Build directories -->
+  <property name="build.dir" value="${home}/build"/>
+  <property name="build.temp.jar" value="${build.dir}/temp"/>
+  <property name="build.classes" value="${build.dir}/classes"/>
+
+  <!-- Component JAR files created -->
+  <property name="dist.ejb.jar" value="${build.dir}/entities-ejb.jar"/>
+  <property name="dist.dto.jar" value="${build.dir}/entities-dto.jar"/>
+
+  <!-- include common ant commands -->
+  &commonAntCommands; 
+
+  <path id="classpath">
+    <path refid="compile.classpath" />
+  </path>
+
+  <!-- Title displayed on the banner when this component is built -->
+  <property name="banner.title" value="Building Entities Component"/>
+
+  <target name="compile">
+    <mkdir dir="${build.classes}"/>
+    <javac srcdir="${src}"
+           destdir="${build.classes}"
+	   includes="com/**">
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <target name="ejbjar" depends="compile">
+    <mkdir dir="${build.temp.jar}/META-INF"/>
+    <copy todir="${build.temp.jar}">
+      <fileset dir="${build.classes}"/>
+    </copy>
+    <copy file="ejb-jar.xml" tofile="${build.temp.jar}/META-INF/ejb-jar.xml"/>
+    <delete file="${dist.ejb.jar}" quiet="true"/>
+    <jar jarfile="${dist.ejb.jar}" basedir="${build.temp.jar}"/>
+    <delete dir="${build.temp.jar}"/>
+  </target>
+
+  <target name="ejbdtojar">
+    <mkdir dir="${build.temp.jar}"/>
+    <copy todir="${build.temp.jar}" >
+     <fileset dir= "${build.classes}">
+      <exclude name="**/ejb/**"/>
+      <exclude name="**/interfaces/*Local*.class"/>
+      <include name="**/interfaces/*Data*.class"/>
+     </fileset>
+    </copy>
+    <delete file="${dist.dto.jar}"/>
+    <jar jarfile="${dist.dto.jar}" basedir="${build.temp.jar}"/>
+    <delete dir="${build.temp.jar}"/>
+  </target>
+
+  <target name="core" depends="banner, compile, ejbjar, ejbdtojar" />
+
+</project>
+
